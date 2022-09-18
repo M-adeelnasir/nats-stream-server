@@ -1,4 +1,5 @@
 import nats from 'node-nats-streaming';
+import { TickerCreatedPublisher } from './events/ticket-created-pub';
 console.clear();
 
 const stan = nats.connect('auth', 'abc', {
@@ -14,7 +15,5 @@ stan.on('connect', () => {
     age: 32,
   };
 
-  stan.publish('ticket:created', JSON.stringify(data), () => {
-    console.log('Event published');
-  });
+  new TickerCreatedPublisher(stan).publish(data);
 });
