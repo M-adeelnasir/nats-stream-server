@@ -6,7 +6,7 @@ const stan = nats.connect('auth', 'abc', {
   url: 'http://localhost:4222',
 });
 
-stan.on('connect', () => {
+stan.on('connect', async () => {
   console.log('Pusblisher is connected with nats server');
 
   const data = {
@@ -15,5 +15,10 @@ stan.on('connect', () => {
     age: 32,
   };
 
-  new TickerCreatedPublisher(stan).publish(data);
+  const publisher = new TickerCreatedPublisher(stan);
+  try {
+    await publisher.publish(data);
+  } catch (err) {
+    console.log(err);
+  }
 });
